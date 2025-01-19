@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple jQuery Routing</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        #content-area {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/routing/home" class="nav-link" data-page="index.html">Home</a>
+        <a href="/routing/about" class="nav-link" data-page="about.html">About</a>
+        <a href="/routing/contact" class="nav-link" data-page="contact.html">Contact</a>
+    </nav>
+    <div id="content-area">
+      
+</div>
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function loadPage(page, url) {
+                $.get(page, function(data) {
+                    $('#content-area').html(data);
+                    if (url) {
+                        history.pushState({ page: page }, '', url);
+                    }
+                });
+            }
+
+            // Default load
+            //const initialPage = window.location.pathname.slice(1) || 'home';
+           // loadPage(initialPage + '.html', null);
+ 	   //loadPage('index.html', null);
+
+
+            // Handle navigation
+            $('.nav-link').click(function(e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                const url = $(this).attr('href');
+                loadPage(page, url);
+            });
+
+            // Handle browser back/forward
+            window.onpopstate = function(event) {
+                if (event.state && event.state.page) {
+                    loadPage(event.state.page, null);
+                }
+            };
+        });
+    </script>
+</body>
+</html>
